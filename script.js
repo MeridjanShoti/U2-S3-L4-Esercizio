@@ -51,10 +51,10 @@ function loadImages() {
         viewBtn.type = "button";
         viewBtn.classList.add("btn", "btn-sm", "btn-outline-secondary");
         viewBtn.innerText = "View";
-        const editBtn = document.createElement("button");
-        editBtn.type = "button";
-        editBtn.classList.add("btn", "btn-sm", "btn-outline-secondary");
-        editBtn.innerText = "Edit";
+        const hideBtn = document.createElement("button");
+        hideBtn.type = "button";
+        hideBtn.classList.add("btn", "btn-sm", "btn-outline-secondary");
+        hideBtn.innerText = "Hide";
         const photoID = document.createElement("small");
         photoID.classList.add("text-muted");
         photoID.innerText = element.id;
@@ -69,7 +69,10 @@ function loadImages() {
         bigContainer.appendChild(btnGroup);
         bigContainer.appendChild(photoID);
         btnGroup.appendChild(viewBtn);
-        btnGroup.appendChild(editBtn);
+        btnGroup.appendChild(hideBtn);
+        hideBtn.addEventListener("click", () => {
+          col.classList.add("d-none");
+        });
       });
     })
     .catch((err) => console.log(err));
