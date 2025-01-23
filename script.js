@@ -1,17 +1,14 @@
-let loadButton = document.getElementById("loadButton");
-let loadSecondary = document.getElementById("loadSecondary");
+const loadButton = document.getElementById("loadButton");
+const loadSecondary = document.getElementById("loadSecondary");
 const row = document.getElementById("mainRow");
-let searchedItem;
+const searchForm = document.getElementById("searchForm");
 loadButton.onclick = () => {
-  searchedItem = "hamsters";
-  loadImages();
+  loadImages("hamsters");
 };
 loadSecondary.onclick = () => {
-  searchedItem = "tigers";
-  loadImages();
+  loadImages("tigers");
 };
-
-function loadImages() {
+function loadImages(searchedItem) {
   const URL = `https://api.pexels.com/v1/search?query=${searchedItem}`;
   fetch(URL, {
     method: "GET",
@@ -24,9 +21,9 @@ function loadImages() {
         throw new Error("Errore nella creazione della card");
       }
     })
-    .then((object) => {
+    .then((pexelsData) => {
       row.innerHTML = "";
-      object.photos.forEach((element) => {
+      pexelsData.photos.forEach((photo) => {
         const col = document.createElement("div");
         col.classList.add("col-md-4");
         const card = document.createElement("div");
@@ -34,15 +31,18 @@ function loadImages() {
         const cardBody = document.createElement("div");
         cardBody.classList.add("card-body");
         const img = document.createElement("img");
-        img.src = element.src.medium;
-        img.alt = element.alt;
+        img.onclick = () => {
+          window.location.assign("./details.html?imgId=" + photo.id);
+        };
+        img.src = photo.src.medium;
+        img.alt = photo.alt;
         img.classList.add("bd-placeholder-img", "card-img-top");
         const title = document.createElement("h5");
         title.classList.add("card-title");
-        title.innerText = "photographer: " + element.photographer;
+        title.innerText = "photographer: " + photo.photographer;
         const cardText = document.createElement("p");
         cardText.classList.add("card-text");
-        cardText.innerText = element.alt;
+        cardText.innerText = photo.alt;
         const bigContainer = document.createElement("div");
         bigContainer.classList.add("d-flex", "justify-content-between", "align-items-center");
         const btnGroup = document.createElement("div");
@@ -57,7 +57,7 @@ function loadImages() {
         hideBtn.innerText = "Hide";
         const photoID = document.createElement("small");
         photoID.classList.add("text-muted");
-        photoID.innerText = element.id;
+        photoID.innerText = photo.id;
 
         row.appendChild(col);
         col.appendChild(card);
@@ -77,3 +77,7 @@ function loadImages() {
     })
     .catch((err) => console.log(err));
 }
+searchForm.onsubmit = (e) => {
+  e.preventDefault();
+  loadImages(searchForm[0].value);
+};
